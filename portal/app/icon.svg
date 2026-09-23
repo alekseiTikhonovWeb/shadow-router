@@ -1,0 +1,9 @@
+<svg width="512" height="512" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="ShadowRouter">
+  <!-- App-icon / favicon / LibreChat login. Ink tile, white chevron = the request,
+       blue offset echo = its shadow (all that's seen from outside). -->
+  <rect width="512" height="512" rx="116" fill="#0A0B0D"/>
+  <g fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="54">
+    <path d="M188 148 L320 256 L188 364" stroke="#0052FF" transform="translate(30 34)"/>
+    <path d="M188 148 L320 256 L188 364" stroke="#FBFBFF"/>
+  </g>
+</svg>

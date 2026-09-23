@@ -1,0 +1,39 @@
+/* Legal pages (/terms, /privacy): calm reading typography. */
+
+.page {
+  max-width: 760px;
+  margin-inline: auto;
+  padding: clamp(32px, 6vh, 72px) 20px 96px;
+}
+.kicker { color: var(--blue); font-weight: 600; font-size: 13px; letter-spacing: 0.04em; text-transform: uppercase; }
+.title { font-size: clamp(2rem, 4vw, 2.8rem); font-weight: 500; margin: 10px 0 6px; letter-spacing: -0.02em; }
+.updated { color: var(--ink-faint); font-size: 13px; margin-bottom: var(--space-xl); }
+
+.page h2 {
+  font-size: 1.25rem; font-weight: 600;
+  margin: var(--space-xl) 0 var(--space-sm);
+  letter-spacing: -0.01em;
+}
+.page p, .page li { color: var(--ink-soft); font-size: 15.5px; line-height: 1.75; }
+.page p { margin: 0 0 var(--space-md); }
+.page ul { margin: 0 0 var(--space-md); padding-left: 22px; }
+.page li { margin-bottom: 6px; }
+.page strong { color: var(--ink); font-weight: 600; }
+.page a { color: var(--blue); }
+
+.callout {
+  background: var(--surface);
+  border-radius: var(--radius-sm);
+  padding: 16px 20px;
+  margin: 0 0 var(--space-lg);
+}
+.callout p { margin: 0; }
+
+.attribution {
+  margin-top: var(--space-2xl);
+  padding-top: var(--space-lg);
+  border-top: 1px solid var(--line);
+  color: var(--ink-faint);
+  font-size: 13px;
+}
+.attribution a { color: var(--ink-faint); text-decoration: underline; }

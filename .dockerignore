@@ -1,0 +1,10 @@
+# Secrets must never enter a build context
+.env
+.env.*
+!.env.example
+
+.git
+.gitignore
+*.md
+data/
+volumes/

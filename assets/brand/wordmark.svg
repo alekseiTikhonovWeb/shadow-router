@@ -1,0 +1,11 @@
+<svg width="880" height="200" viewBox="0 0 880 200" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="ShadowRouter">
+  <!-- Horizontal lockup: tile mark + wordmark (Shadow ink / Router blue). -->
+  <rect x="8" y="20" width="160" height="160" rx="38" fill="#0A0B0D"/>
+  <g fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="18">
+    <path d="M66 66 L108 100 L66 134" stroke="#0052FF" transform="translate(10 11)"/>
+    <path d="M66 66 L108 100 L66 134" stroke="#FBFBFF"/>
+  </g>
+  <text x="200" y="128" font-family="'Archivo','Helvetica Neue',Arial,sans-serif" font-weight="700" font-size="92" letter-spacing="-3">
+    <tspan fill="#0A0B0D">Shadow</tspan><tspan fill="#0052FF">Router</tspan>
+  </text>
+</svg>

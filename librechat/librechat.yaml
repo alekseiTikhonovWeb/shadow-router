@@ -1,0 +1,100 @@
+# UI only: all traffic goes to LiteLLM, where the single balance lives.
+# One custom endpoint per provider (= a tab), all sharing LITELLM_USER_KEY / LITELLM_BASE_URL.
+# Docs: https://www.librechat.ai/docs/configuration/librechat_yaml
+
+version: 1.2.1
+cache: true
+
+# Balance stays off: accounting lives in LiteLLM.
+balance:
+  enabled: false
+
+interface:
+  memories: true
+  webSearch: true
+  agents:
+    use: true
+    create: true
+  privacyPolicy:
+    externalUrl: "https://shadowrouter.ca/privacy"
+    openNewTab: true
+  termsOfService:
+    externalUrl: "https://shadowrouter.ca/terms"
+    openNewTab: true
+
+# Memory extraction runs on a cheap OpenAI model with reliable tool calling.
+memory:
+  disabled: false
+  personalize: true
+  tokenLimit: 2000
+  messageWindowSize: 5
+  agent:
+    provider: "ChatGPT"
+    model: "gpt-4o-mini"
+    enabled: true
+
+# fetch:false: each tab keeps its own model list.
+endpoints:
+  custom:
+    - name: "ChatGPT"
+      apiKey: "${LITELLM_USER_KEY}"
+      baseURL: "${LITELLM_BASE_URL}"
+      models:
+        default: ["gpt-4o-mini", "gpt-5.4-nano", "gpt-5.4-mini", "gpt-5.4", "gpt-5.4-pro", "gpt-5.5", "gpt-5.5-pro", "gpt-5.6-luna", "gpt-5.6-terra", "gpt-5.6-sol"]
+        fetch: false
+      titleConvo: true
+      titleModel: "gpt-4o-mini"
+      modelDisplayLabel: "ChatGPT"
+
+    - name: "Codex"
+      apiKey: "${LITELLM_USER_KEY}"
+      baseURL: "${LITELLM_BASE_URL}"
+      models:
+        default: ["gpt-5.3-codex"]
+        fetch: false
+      titleConvo: true
+      titleModel: "gpt-4o-mini"
+      modelDisplayLabel: "Codex"
+
+    - name: "Gemini"
+      apiKey: "${LITELLM_USER_KEY}"
+      baseURL: "${LITELLM_BASE_URL}"
+      models:
+        default: ["gemini-2.5-flash-lite", "gemini-2.5-flash", "gemini-2.5-pro", "gemini-3.5-flash", "gemini-3.1-pro-preview"]
+        fetch: false
+      titleConvo: true
+      titleModel: "gemini-2.5-flash"
+      modelDisplayLabel: "Gemini"
+
+    # Placeholder until ANTHROPIC_KEYS is set in litellm.
+    - name: "Claude"
+      apiKey: "${LITELLM_USER_KEY}"
+      baseURL: "${LITELLM_BASE_URL}"
+      models:
+        default: ["claude-haiku-4-5", "claude-sonnet-4-5", "claude-sonnet-4-6", "claude-sonnet-5", "claude-opus-4-5", "claude-opus-4-6", "claude-opus-4-7", "claude-opus-4-8", "claude-fable-5", "claude-mythos-5"]
+        fetch: false
+      titleConvo: true
+      titleModel: "claude-haiku-4-5"
+      modelDisplayLabel: "Claude"
+
+    # Placeholder until XAI_KEYS is set in litellm.
+    - name: "Grok"
+      apiKey: "${LITELLM_USER_KEY}"
+      baseURL: "${LITELLM_BASE_URL}"
+      models:
+        default: ["grok-4.3", "grok-build-0.1"]
+        fetch: false
+      titleConvo: true
+      titleModel: "grok-4.3"
+      modelDisplayLabel: "Grok"
+
+    # Placeholder until DEEPSEEK_KEYS is set in litellm.
+    - name: "DeepSeek"
+      apiKey: "${LITELLM_USER_KEY}"
+      baseURL: "${LITELLM_BASE_URL}"
+      models:
+        default: ["deepseek-v4-flash", "deepseek-v4-pro"]
+        fetch: false
+      titleConvo: true
+      titleModel: "deepseek-v4-flash"
+      modelDisplayLabel: "DeepSeek"

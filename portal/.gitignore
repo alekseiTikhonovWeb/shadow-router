@@ -1,0 +1,19 @@
+# dependencies
+node_modules/
+
+# next.js build
+.next/
+out/
+next-env.d.ts
+
+# secrets
+.env
+.env.*
+!.env.example
+
+# misc
+*.log
+.DS_Store
+
+# typescript incremental cache
+tsconfig.tsbuildinfo

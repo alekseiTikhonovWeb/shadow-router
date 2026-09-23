@@ -1,0 +1,83 @@
+# Source of truth for models; litellm/config.yaml is generated from it by gen_config.py.
+# Keys: one env list per provider (keys_env); every enabled model is expanded into a pool over those keys.
+# Prices: $ per 1M tokens, standard tier, checked 2026-07-08. Our price = value x MARKUP, never below cost.
+# enabled:false / in:0 = price unconfirmed; the model is not generated.
+
+markup_env: MARKUP
+
+providers:
+  # OpenAI: "ChatGPT" and "Codex" tabs
+  openai:
+    prefix: openai
+    keys_env: OPENAI_KEYS
+    legacy_prefix: OPENAI_API_KEY
+    models:
+      # Load-test only: enable for the test, then disable; mock = canned answer, no provider call.
+      - { id: loadtest-echo, in: 0, out: 0, enabled: false, mock: "pong" }
+      # ChatGPT
+      - { id: gpt-4o-mini,   in: 0.15, out: 0.60,  enabled: true }
+      - { id: gpt-5.4-nano,  in: 0.20, out: 1.25,  enabled: true }
+      - { id: gpt-5.4-mini,  in: 0.75, out: 4.50,  enabled: true }
+      - { id: gpt-5.4,       in: 2.50, out: 15.0,  enabled: true }
+      - { id: gpt-5.4-pro,   in: 30.0, out: 180.0, enabled: true }
+      - { id: gpt-5.5,       in: 5.0,  out: 30.0,  enabled: true }
+      - { id: gpt-5.5-pro,   in: 30.0, out: 180.0, enabled: true }
+      - { id: gpt-5.6-luna,  in: 1.0,  out: 6.0,   enabled: true }   # 5.6 small
+      - { id: gpt-5.6-terra, in: 2.50, out: 15.0,  enabled: true }   # 5.6 medium
+      - { id: gpt-5.6-sol,   in: 5.0,  out: 30.0,  enabled: true }   # 5.6 flagship
+      # Codex: separate tab, same OpenAI keys
+      - { id: gpt-5.3-codex, in: 1.75, out: 14.0,  enabled: true }
+
+  # Google: "Gemini" tab
+  gemini:
+    prefix: gemini
+    keys_env: GEMINI_KEYS
+    legacy_prefix: GEMINI_API_KEY
+    models:
+      - { id: gemini-2.5-flash, in: 0.30, out: 2.50, enabled: true }
+      - { id: gemini-2.5-pro,   in: 1.25, out: 10.0, enabled: true }
+      # Tiered / preview pricing: confirm, then enable.
+      - { id: gemini-2.5-flash-lite,  in: 0, out: 0, enabled: false }   # VERIFY
+      - { id: gemini-3.5-flash,       in: 0, out: 0, enabled: false }   # VERIFY
+      - { id: gemini-3.1-pro-preview, in: 0, out: 0, enabled: false }   # VERIFY
+
+  # Anthropic: "Claude" tab (needs ANTHROPIC_KEYS). Claude 4.5 and newer, standard tier.
+  anthropic:
+    prefix: anthropic
+    keys_env: ANTHROPIC_KEYS
+    legacy_prefix: ANTHROPIC_API_KEY
+    models:
+      - { id: claude-haiku-4-5,  in: 1.0,  out: 5.0,  enabled: true }
+      - { id: claude-sonnet-4-5, in: 3.0,  out: 15.0, enabled: true }
+      - { id: claude-sonnet-4-6, in: 3.0,  out: 15.0, enabled: true }
+      - { id: claude-sonnet-5,   in: 3.0,  out: 15.0, enabled: true }   # intro $2/$10 until 2026-08-31
+      - { id: claude-opus-4-5,   in: 5.0,  out: 25.0, enabled: true }
+      - { id: claude-opus-4-6,   in: 5.0,  out: 25.0, enabled: true }
+      - { id: claude-opus-4-7,   in: 5.0,  out: 25.0, enabled: true }
+      - { id: claude-opus-4-8,   in: 5.0,  out: 25.0, enabled: true }
+      - { id: claude-fable-5,    in: 10.0, out: 50.0, enabled: true }
+      - { id: claude-mythos-5,   in: 10.0, out: 50.0, enabled: true }   # limited availability
+
+  # xAI: "Grok" tab (needs XAI_KEYS)
+  xai:
+    prefix: xai
+    keys_env: XAI_KEYS
+    legacy_prefix: XAI_API_KEY
+    models:
+      - { id: grok-4.3,       in: 1.25, out: 2.50, enabled: true }
+      - { id: grok-build-0.1, in: 1.0,  out: 2.0,  enabled: true }   # coding model
+
+  # DeepSeek: "DeepSeek" tab (needs DEEPSEEK_KEYS)
+  deepseek:
+    prefix: deepseek
+    keys_env: DEEPSEEK_KEYS
+    legacy_prefix: DEEPSEEK_API_KEY
+    models:
+      - { id: deepseek-v4-flash, in: 0.14,  out: 0.28, enabled: true }
+      - { id: deepseek-v4-pro,   in: 0.435, out: 0.87, enabled: true }
+
+router:
+  routing_strategy: usage-based-routing-v2
+  num_retries: 3
+  allowed_fails: 1
+  cooldown_time: 30

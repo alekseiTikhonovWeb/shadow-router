@@ -1,0 +1,104 @@
+# Local stack. Run: docker compose up -d
+# LiteLLM API http://localhost:4000 · LibreChat http://localhost:3080 · backend http://localhost:8088
+
+services:
+  # LiteLLM: core / data plane
+  litellm:
+    # Built from ./litellm because config.yaml is generated at startup (gen_config.py).
+    build: ./litellm
+    container_name: shadow-litellm
+    restart: unless-stopped
+    depends_on:
+      litellm-db:
+        condition: service_healthy
+      redis:
+        condition: service_started
+    env_file: .env
+    ports:
+      - "4000:4000"
+    healthcheck:
+      test: ["CMD-SHELL", "python -c \"import urllib.request,sys; sys.exit(0 if urllib.request.urlopen('http://localhost:4000/health/liveliness').status==200 else 1)\""]
+      interval: 15s
+      timeout: 5s
+      retries: 10
+      start_period: 30s
+    networks: [shadow]
+
+  # Postgres for LiteLLM (keys, spend, budgets)
+  litellm-db:
+    image: postgres:16
+    container_name: shadow-litellm-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+    volumes:
+      - litellm_pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks: [shadow]
+
+  # Redis: LiteLLM router state / cache
+  redis:
+    image: redis:7-alpine
+    container_name: shadow-redis
+    restart: unless-stopped
+    networks: [shadow]
+
+  # LibreChat: web chat UI only; its own balance is OFF
+  librechat:
+    image: ghcr.io/danny-avila/librechat:latest
+    container_name: shadow-librechat
+    restart: unless-stopped
+    depends_on:
+      mongodb:
+        condition: service_started
+      litellm:
+        condition: service_started
+    env_file: .env
+    environment:
+      HOST: 0.0.0.0
+      PORT: 3080
+      MONGO_URI: ${MONGO_URI}
+      CONFIG_PATH: /app/librechat.yaml
+    volumes:
+      - ./librechat/librechat.yaml:/app/librechat.yaml:ro
+    ports:
+      - "3080:3080"
+    networks: [shadow]
+
+  # Backend (control plane): provisioning. Not on the hot path.
+  backend:
+    build: ./backend
+    container_name: shadow-backend
+    restart: unless-stopped
+    depends_on:
+      litellm:
+        condition: service_healthy
+    env_file: .env
+    environment:
+      LITELLM_BASE_URL: http://litellm:4000
+    ports:
+      - "8088:8000"
+    networks: [shadow]
+
+  # MongoDB for LibreChat
+  mongodb:
+    image: mongo:7
+    container_name: shadow-mongo
+    restart: unless-stopped
+    volumes:
+      - mongo_data:/data/db
+    networks: [shadow]
+
+volumes:
+  litellm_pgdata:
+  mongo_data:
+
+networks:
+  shadow:
+    driver: bridge

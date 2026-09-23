@@ -1,0 +1,36 @@
+/* Account widgets (CopyKey, TopupForm). Tokens live in globals.css */
+
+.copyBtn {
+  flex: none;
+  font-size: var(--text-xs); font-weight: 700;
+  padding: 8px 14px; border-radius: 999px;
+  border: 1.5px solid var(--line); background: transparent;
+  cursor: pointer; color: var(--ink-soft);
+  transition: all 0.2s ease;
+}
+.copyBtn:hover { border-color: var(--blue); color: var(--blue); }
+.copyBtnDone { border-color: var(--blue); background: var(--blue-tint); color: var(--blue); }
+
+/* billing */
+.amounts { display: flex; flex-wrap: wrap; gap: var(--space-sm); margin-top: var(--space-lg); }
+.amountBtn {
+  font-family: var(--font-display), sans-serif;
+  font-size: var(--text-lg); font-weight: 700;
+  padding: 14px 24px; border-radius: var(--radius-md);
+  border: 1.5px solid var(--line); background: #ffffff;
+  cursor: pointer; color: var(--ink);
+  transition: all 0.2s ease;
+}
+.amountBtn:hover { border-color: var(--ink-faint); }
+.amountActive { border-color: var(--blue); background: var(--blue-tint); color: var(--blue); }
+.customRow { display: flex; align-items: center; gap: 10px; margin-top: var(--space-lg); }
+.customInput {
+  font-family: var(--font-display), sans-serif;
+  font-size: var(--text-lg); font-weight: 700;
+  width: 130px; padding: 12px 16px;
+  border-radius: var(--radius-md);
+  border: 1.5px solid var(--line);
+  background: #ffffff;
+  color: var(--ink);
+}
+.customInput:focus { outline: none; border-color: var(--blue); }

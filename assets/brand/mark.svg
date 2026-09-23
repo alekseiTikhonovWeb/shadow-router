@@ -1,0 +1,7 @@
+<svg width="512" height="512" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="ShadowRouter">
+  <!-- Transparent mark for light surfaces: ink chevron + blue shadow-echo. -->
+  <g fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="58">
+    <path d="M170 96 L336 256 L170 416" stroke="#0052FF" transform="translate(34 38)"/>
+    <path d="M170 96 L336 256 L170 416" stroke="#0A0B0D"/>
+  </g>
+</svg>

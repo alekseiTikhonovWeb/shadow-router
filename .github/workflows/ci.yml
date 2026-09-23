@@ -1,0 +1,70 @@
+# Unit tests mock every external service, so CI needs no secrets.
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  backend-tests:
+    name: backend pytest
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: backend
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+      - name: Install deps
+        run: pip install -r requirements.txt -r requirements-dev.txt
+      - name: Run tests
+        run: python -m pytest -q
+
+  catalog-generator:
+    name: litellm gen_config smoke
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: pip install pyyaml
+      - name: Generate config from catalog + fake keys
+        working-directory: litellm
+        env:
+          OPENAI_KEYS: sk-fake-1,sk-fake-2
+          GEMINI_KEYS: AIza-fake
+          MARKUP: "1.0"
+        run: |
+          python gen_config.py /tmp/config.yaml
+          python -c "import yaml; c=yaml.safe_load(open('/tmp/config.yaml')); assert c['model_list'], 'empty model_list'; print('deployments:', len(c['model_list']))"
+
+  portal-build:
+    name: portal typecheck + build
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: portal
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: npm
+          cache-dependency-path: portal/package-lock.json
+      - run: npm ci
+      - run: npx tsc --noEmit
+      - name: Build (dummy env — no secrets needed to compile)
+        env:
+          BACKEND_URL: http://localhost:8088
+          INTERNAL_API_TOKEN: ci
+          LOGTO_ENDPOINT: https://example.logto.app
+          LOGTO_APP_ID: ci
+          LOGTO_APP_SECRET: ci
+          LOGTO_COOKIE_SECRET: ci_cookie_secret_min_len_32_padding
+          BASE_URL: http://localhost:3000
+        run: npm run build

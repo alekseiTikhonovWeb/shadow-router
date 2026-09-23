@@ -1,0 +1,141 @@
+/* Design tokens: Coinbase palette + Revolut motion (see .impeccable.md). */
+
+:root {
+  --bg: #ffffff;
+  --surface: #eef0f3;          /* grey panels / card sections */
+  --surface-soft: #f7f8f9;
+  --line: rgba(91, 97, 110, 0.2);
+  --ink: #0a0b0d;
+  --ink-soft: #5b616e;
+  --ink-faint: #8a919e;
+
+  --blue: #0052ff;             /* primary CTA */
+  --blue-dark: #0141cf;        /* hover */
+  --blue-link: #0667d0;        /* links */
+  --blue-tint: #eaf0fe;
+  --green: #098551;
+  --red: #cf202f;
+  --red-tint: #fceaec;
+
+  --shadow-mid: 0 10px 30px -12px rgba(10, 11, 13, 0.18);
+  --shadow-long: 0 24px 60px -20px rgba(10, 11, 13, 0.22);
+
+  /* Spacing (4pt) */
+  --space-2xs: 4px; --space-xs: 8px; --space-sm: 12px; --space-md: 16px;
+  --space-lg: 24px; --space-xl: 32px; --space-2xl: 48px; --space-3xl: 64px;
+
+  /* Type: CB-style huge light headings (h1 80/400, h2 44/400) */
+  --text-xs: 0.8rem; --text-sm: 0.875rem; --text-md: 1rem; --text-lg: 1.2rem;
+  --text-xl: 1.5rem; --text-2xl: 2rem;
+  --text-hero: clamp(3rem, 6.5vw, 5rem);        /* ~80px on desktop */
+  --text-h2: clamp(2rem, 3.6vw, 2.75rem);        /* ~44px */
+
+  --radius-sm: 12px; --radius-md: 16px; --radius-lg: 32px; --radius-pill: 999px;
+  --ease-out-expo: cubic-bezier(0.16, 1, 0.3, 1);
+  --container: 1200px;
+}
+
+* { box-sizing: border-box; }
+
+html { scroll-behavior: smooth; }
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--font-body), sans-serif;
+  font-size: var(--text-md);
+  line-height: 1.5;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+h1, h2, h3 {
+  font-family: var(--font-display), sans-serif;
+  font-weight: 400;
+  line-height: 1.02;
+  letter-spacing: -0.02em;
+  margin: 0;
+  text-wrap: balance;
+}
+h3 { font-weight: 500; line-height: 1.25; }
+
+p { margin: 0; max-width: 64ch; }
+a { color: var(--blue-link); text-decoration: none; }
+a:hover { color: var(--blue); }
+code, .mono { font-family: var(--font-mono), monospace; }
+
+::selection { background: var(--blue-tint); color: var(--ink); }
+
+:focus-visible {
+  outline: 2px solid var(--blue);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
+/* Reusable */
+
+.container { max-width: var(--container); margin: 0 auto; padding-inline: clamp(20px, 4vw, 40px); }
+
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 10px;
+  font-family: var(--font-body), sans-serif;
+  font-size: var(--text-md); font-weight: 600;
+  padding: 15px 32px; border-radius: var(--radius-pill);
+  border: none; cursor: pointer;
+  position: relative; overflow: hidden;
+  transition: transform 0.35s var(--ease-out-expo), background-color 0.2s ease,
+    box-shadow 0.35s var(--ease-out-expo), filter 0.2s ease;
+}
+/* highlight sweep across the button on hover */
+.btn::after {
+  content: '';
+  position: absolute; inset: 0;
+  background: linear-gradient(105deg, transparent 38%, rgba(255, 255, 255, 0.28) 50%, transparent 62%);
+  transform: translateX(-120%);
+  transition: transform 0.7s var(--ease-out-expo);
+  pointer-events: none;
+}
+.btn:hover::after { transform: translateX(120%); }
+.btn:active { transform: translateY(0) scale(0.97); transition-duration: 0.08s; }
+
+.btn-primary { background: var(--blue); color: #fff; }
+.btn-primary:hover {
+  color: #fff;               /* else the global a:hover turns the text blue */
+  background: #2e6dff;
+  transform: translateY(-2px) scale(1.02);
+  box-shadow: 0 10px 26px -8px rgba(0, 82, 255, 0.55);
+}
+
+.btn-ghost { background: var(--surface); color: var(--ink); }
+.btn-ghost:hover {
+  color: var(--ink);
+  background: #f4f6f9;
+  transform: translateY(-2px) scale(1.02);
+  box-shadow: 0 8px 20px -8px rgba(10, 11, 13, 0.22);
+}
+
+/* for dark / blue panels */
+.btn-inverse { background: #fff; color: var(--ink); }
+.btn-inverse:hover {
+  color: var(--ink);
+  transform: translateY(-2px) scale(1.02);
+  box-shadow: 0 10px 26px -8px rgba(4, 15, 22, 0.4);
+}
+
+.btn[disabled] { opacity: 0.55; cursor: default; transform: none; box-shadow: none; }
+.btn[disabled]::after { display: none; }
+
+.eyebrow {
+  font-size: var(--text-sm); font-weight: 600;
+  color: var(--blue);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
